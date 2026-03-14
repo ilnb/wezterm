@@ -3,10 +3,10 @@ local backdrops = require 'utils.backdrops'
 local colors = require 'colors.custom'[require 'utils.qs' and 'qs' or 'fallback']
 
 local bg = backdrops:initial_options(false) -- set to true if you want wezterm to start on focus mode
--- bg = nil
+bg = nil
 
 local opacity = function()
-  return bg and 0.75 or 0.85
+  return bg and 0.75 or 0.90
 end
 
 ---@type Config
