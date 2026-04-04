@@ -151,7 +151,7 @@ end
 
 local function build_colors(data)
   local m = {}
-  for line in data:gmatch '[^\r\n]' do
+  for line in data:gmatch '[^\r\n]+' do
     local k, v = line:match "%$(%w+)%s*=%s*(%x+)"
     if k and v then
       m[k] = "#" .. v
