@@ -127,28 +127,36 @@ local colorscheme = {
   compose_cursor = mocha.flamingo,
 }
 
--- Reads scheme file into a k → hex map
----@param scheme_file string
-local function load_scheme(scheme_file)
-  local f = io.open(scheme_file, "r")
-  if not f then return nil end
+local wezterm = require 'wezterm'
+local custom_file = os.getenv 'HOME' .. '/.config/hypr/custom/wezterm.conf'
+local scheme_file = os.getenv 'HOME' .. '/.config/hypr/scheme/current.conf'
+local cached_colors
+local prev_hash
 
-  local map = {}
-  for line in f:lines() do
-    local k, v = line:match "%$(%w+)%s*=%s*(%x+)"
-    if k and v then
-      map[k] = "#" .. v
-    end
+local function open_config()
+  local f = io.open(custom_file, 'r')
+  if not f then
+    f = io.open(scheme_file, 'r')
   end
-  f:close()
-  return map
+  return f
 end
 
+local function scheme_hash(data)
+  local hash = 0
+  for i = 1, #data do
+    hash = (hash + data:byte(i)) % 2 ^ 32
+  end
+  return hash
+end
 
-local function get_colors()
-  local path = os.getenv 'HOME' .. '/.config/hypr/scheme/current.conf'
-  local m = load_scheme(path)
-  if not m then return kanagawa end
+local function build_colors(data)
+  local m = {}
+  for line in data:gmatch '[^\r\n]' do
+    local k, v = line:match "%$(%w+)%s*=%s*(%x+)"
+    if k and v then
+      m[k] = "#" .. v
+    end
+  end
 
   local colors = {
     ansi = {
@@ -186,4 +194,25 @@ local function get_colors()
   return colors
 end
 
-return { qs = require 'utils.qs' and get_colors(), fallback = kanagawa }
+local function get_colors()
+  local f = open_config()
+  if not f then return kanagawa end
+  local data = f:read '*a'
+  f:close()
+
+  local curr_hash = scheme_hash(data)
+  if curr_hash == prev_hash then return cached_colors end
+
+  cached_colors = build_colors(data)
+  prev_hash = curr_hash
+  return cached_colors
+end
+
+local function setup()
+  wezterm.on('update-right-status', function(window)
+    window:set_config_overrides { colors = get_colors() }
+  end)
+  return { qs = require 'utils.qs' and get_colors, fallback = kanagawa }
+end
+
+return setup
