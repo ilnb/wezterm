@@ -1,8 +1,6 @@
 local gpu_adapters = require 'utils.gpu_adapter'
 local backdrops = require 'utils.backdrops'
-local custom = require 'colors.custom'
-local colors = custom()
-local colors_tbl = require 'utils.qs' and colors.qs() or colors.fallback
+local colors = require 'colors.custom' ()
 
 local bg = backdrops:initial_options(false) -- set to true if you want wezterm to start on focus mode
 bg = nil
@@ -29,7 +27,7 @@ return {
   cursor_blink_rate = 0,
 
   -- color scheme
-  colors = colors_tbl,
+  colors = colors,
 
   -- background
   background = bg,

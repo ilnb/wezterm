@@ -1,8 +1,6 @@
 ---@type Wezterm
 local wezterm = require 'wezterm'
-local custom = require 'colors.custom'
-local colors = custom()
-local colors_tbl = require 'utils.qs' and colors.qs() or colors.fallback
+local colors = require 'colors.custom' ()
 
 -- Seeding random numbers before generating for use
 -- Known issue with lua math library
@@ -30,7 +28,7 @@ function BackDrops:init()
     current_idx = 1,
     images = {},
     images_dir = wezterm.config_dir .. '/backdrops/',
-    focus_color = colors_tbl.background,
+    focus_color = colors.background,
     focus_on = false,
   }
   local backdrops = setmetatable(inital, self)
@@ -83,7 +81,7 @@ function BackDrops:_create_opts()
       horizontal_align = 'Center',
     },
     {
-      source = { Color = colors_tbl.background },
+      source = { Color = colors.background },
       height = '120%',
       width = '120%',
       vertical_offset = '-10%',

@@ -195,6 +195,9 @@ local function build_colors(data)
 end
 
 local function get_colors()
+  if not require 'utils.qs' then
+    return kanagawa
+  end
   local f = open_config()
   if not f then return kanagawa end
   local data = f:read '*a'
@@ -212,7 +215,7 @@ local function setup()
   wezterm.on('update-right-status', function(window)
     window:set_config_overrides { colors = get_colors() }
   end)
-  return { qs = require 'utils.qs' and get_colors, fallback = kanagawa }
+  return get_colors()
 end
 
 return setup
