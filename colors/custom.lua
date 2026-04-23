@@ -211,11 +211,17 @@ local function get_colors()
   return cached_colors
 end
 
-local function setup()
+if not _G.colors_registered then
+  _G.colors_registered = true
   wezterm.on('update-right-status', function(window)
-    window:set_config_overrides { colors = get_colors() }
+    local overrides = window:get_config_overrides() or {}
+    local colors = get_colors()
+
+    if overrides.colors ~= colors then
+      overrides.colors = colors
+      window:set_config_overrides(overrides)
+    end
   end)
-  return get_colors()
 end
 
-return setup
+return get_colors
