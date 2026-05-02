@@ -128,8 +128,9 @@ local colorscheme = {
 }
 
 local wezterm = require 'wezterm'
-local custom_file = os.getenv 'HOME' .. '/.config/hypr/custom/wezterm.conf'
-local scheme_file = os.getenv 'HOME' .. '/.config/hypr/scheme/current.conf'
+local home = os.getenv 'HOME'
+local custom_file = home .. '/.config/hypr/custom/wezterm.conf'
+local scheme_file = home .. '/.config/hypr/scheme/current.conf'
 local cached_colors
 local prev_hash
 
@@ -158,6 +159,24 @@ local function build_colors(data)
     end
   end
 
+  local indexed = {
+    [16] = '#ffa066',
+    [17] = '#ff5d62',
+  }
+
+  local kitty_file = home .. '/.local/state/quickshell/user/generated/terminal/kitty-theme.conf'
+  local kf = io.open(kitty_file, 'r')
+  if kf then
+    for line in kf:lines() do
+      local idx, hex = line:match "^color(%d+)%s+(#[%x]+)"
+      idx = tonumber(idx)
+      if idx and hex and idx >= 16 then
+        indexed[idx] = hex
+      end
+    end
+    kf:close()
+  end
+
   local colors = {
     ansi = {
       m.term0, m.term1, m.term2, m.term3,
@@ -183,10 +202,7 @@ local function build_colors(data)
 
     compose_cursor = m.flamingo or m.pink or kanagawa.compose_cursor,
 
-    indexed = {
-      [16] = '#ffa066',
-      [17] = '#ff5d62',
-    },
+    indexed = indexed,
 
     tab_bar = kanagawa.tab_bar,
   }
