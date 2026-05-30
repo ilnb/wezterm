@@ -3,7 +3,7 @@ local wezterm = require 'wezterm'
 
 local font_family = 'Maple Mono'
 -- local font_family = 'JetBrainsMono Nerd Font'
-local font_size = 15.9
+local font_size = 14.9
 if require 'config.appearance'.enable_wayland then
   font_size = font_size - 4
 end

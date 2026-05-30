@@ -14,10 +14,10 @@ return {
   -- max_fps = 144,
   -- max_fps = 60,
   front_end = 'WebGpu',
-  webgpu_power_preference = 'LowPower',
+  -- webgpu_power_preference = 'LowPower',
   -- webgpu_preferred_adapter = gpu_adapters:pick_best(),
   -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Vulkan', 'IntegratedGpu'),
-  -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
+  webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
 
   -- cursor
   -- animation_fps = 144,
@@ -38,7 +38,7 @@ return {
 
   -- tab bar
   enable_tab_bar = true,
-  hide_tab_bar_if_only_one_tab = false,
+  hide_tab_bar_if_only_one_tab = true,
   use_fancy_tab_bar = false,
   tab_max_width = 25,
   show_tab_index_in_tab_bar = false,

@@ -131,8 +131,10 @@ local wezterm = require 'wezterm'
 local home = os.getenv 'HOME'
 local custom_file = home .. '/.config/hypr/custom/wezterm.conf'
 local scheme_file = home .. '/.config/hypr/scheme/current.conf'
+local kitty_file = home .. '/.local/state/quickshell/user/generated/terminal/kitty-theme.conf'
 local cached_colors
 local prev_hash
+wezterm.add_to_config_reload_watch_list(kitty_file)
 
 local function open_config()
   local f = io.open(custom_file, 'r')
@@ -153,9 +155,9 @@ end
 local function build_colors(data)
   local m = {}
   for line in data:gmatch '[^\r\n]+' do
-    local k, v = line:match "%$(%w+)%s*=%s*(%x+)"
+    local k, v = line:match '%$(%w+)%s*=%s*(%x+)'
     if k and v then
-      m[k] = "#" .. v
+      m[k] = '#' .. v
     end
   end
 
@@ -164,11 +166,10 @@ local function build_colors(data)
     [17] = '#ff5d62',
   }
 
-  local kitty_file = home .. '/.local/state/quickshell/user/generated/terminal/kitty-theme.conf'
   local kf = io.open(kitty_file, 'r')
   if kf then
     for line in kf:lines() do
-      local idx, hex = line:match "^color(%d+)%s+(#[%x]+)"
+      local idx, hex = line:match '^color(%d+)%s+(#[%x]+)'
       idx = tonumber(idx)
       if idx and hex and idx >= 16 then
         indexed[idx] = hex
